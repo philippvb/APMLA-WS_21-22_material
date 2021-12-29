@@ -1,0 +1,64 @@
+\documentclass[a4paper]{scrartcl}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{pgfplots}
+\usepackage{amsmath, enumerate, amssymb, multirow, fancyhdr, color, graphicx, lastpage, listings, tikz, pdflscape, subfigure, float, polynom, hyperref, tabularx, forloop, geometry, listings, fancybox, tikz, forest, tabstackengine, cancel, bbm}
+\input kvmacros
+\geometry{a4paper,left=3cm, right=3cm, top=3cm, bottom=3cm}
+\pagestyle {fancy}
+
+
+\begin{document}
+\section*{(a)}
+
+Naive idea:
+\begin{align}
+    P(M) = \frac{1}{Z}\prod_i \mathbbm{1}^{(\sum_j \sigma^{ij} = 1)}
+\end{align}
+
+\section*{(b)}
+We have the size $S = M=\sum_{ij} \sigma^{ij}$ and the normalized version $S^*=\frac{M}{\lvert E \rvert}$.
+
+\section*{(c)}
+We have the messages from variable to factor:
+\begin{align}
+    \hat{v}_{i \rightarrow \alpha}(x_i) = \prod_{\beta \in \partial \alpha \backslash i} \hat{v}_{b \rightarrow i}(x_i)
+\end{align}
+and factor to variable:
+\begin{align}
+    \hat{v}_{\alpha \rightarrow i}(x_i) = \sum_{x \in \partial \alpha \backslash i} (\Psi_a(X_{\partial a}) \prod_{j \in \partial a \backslash i} v_{j \rightarrow a}(x_j))
+\end{align}
+
+The general BP marginal is:
+\begin{align}
+    P(x_i) = v_i(x_i) = \prod_{a \in \partial i} \hat{v}_{\alpha \rightarrow i}(x_i)
+\end{align}
+
+For our problem, this leads to to message from factor to variable:
+\begin{align}
+    \hat{v}_{i \rightarrow \sigma_{ij}}(\sigma_{ij}) &= \sum_{\sigma_{ik} \in \partial i \backslash \sigma{ij}} (\mathbbm{1}^{(\sum_l \sigma^{il} = 1)} \prod_{\sigma_{ik} \in \partial a \backslash i} v_{\sigma_{ik} \rightarrow i}(\sigma_{ik}))\\
+\end{align}
+
+This means the marginal is:
+\begin{align}
+    P(\sigma_{ij}) = \hat{v}_{i \rightarrow \sigma_{ij}}(\sigma_{ij}) \cdot \hat{v}_{j \rightarrow \sigma_{ij}}(\sigma_{ij})
+\end{align}
+For $\sigma_{ij}=1$, this leads to:
+\begin{align}
+    P(\sigma_{ij}=1) =  \prod_{\sigma_{ik} \in \partial a \backslash i} v_{\sigma_{ik} \rightarrow i}(0)
+\end{align}
+wich intuitively makes sense, since all the others have to be 0 in order for $\sigma_{ij}$ to be 1.\\
+For $\sigma_{ij}=0$, this leads to:
+\begin{align}
+    P(\sigma_{ij}=1) = \sum_{\sigma_{ik} \in \partial i \backslash \sigma_{ij}} (\mathbbm{1}^{(\sum_{l \backslash i} \sigma_{il} = 1)} \prod_{\sigma_{ik} \in \partial a \backslash i} v_{\sigma_{ik} \rightarrow i}(\sigma_{ik}))\\
+\end{align}
+here the main difference is that the factor $\Psi_{i}$ doesn't sum over $\sigma_{ij}$ anymore, since it is set to 0.
+
+\section*{(d)}
+For one point marginal, see (c). For two point marginal, we have:
+\begin{align}
+    P(\sigma_{ij}, \sigma_{kl}) = P(\sigma_{ij} \vert \sigma_{kl}) P(\sigma_{kl})
+\end{align}
+with $P(\sigma_{ij} \vert \sigma_{kl}) = $
+\end{document}
+

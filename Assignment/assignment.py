@@ -94,12 +94,13 @@ def plot_marginal_graph(edge_marginals, G):
     plt.show()
 
 
-def compute_fac_to_var_message(G, fac, var):
-    # for computation, we assume variable/egde is 0
-    message_sum = 0
+def compute_fac_to_var_message(G, fac, var, compute_p_0=False):
     neighbour_edges = G.edges(fac)
     neighbour_edges = list(G.edges(fac))
     neighbour_edges.remove(var)
+
+    message_sum = 0
+    # instead we use the message if x = 1
     for active_edge in neighbour_edges: # we just need to iterate over all possible neighbours since just one of them can be one at a time
         zero_edges = neighbour_edges.copy()
         zero_edges.remove(active_edge)
@@ -107,7 +108,25 @@ def compute_fac_to_var_message(G, fac, var):
         active_prob = (1 - G[active_edge[0]][active_edge[1]]["message_t"][fac][1])
         message_sum += reduce(mul, product, 1)* active_prob # multiply be incoming for neighbour beeing 1 and add to sum
 
-    return message_sum
+    p1 = [G.edges()[edge]['message_t'][fac][1] for edge in neighbour_edges]
+    error = 1 - reduce(mul, p1, 1) + message_sum
+
+    if compute_p_0: # compute for P(X=0)
+        # for computation, we assume variable/egde is 0
+        message_sum = 0
+        # instead we use the message if x = 1
+        for active_edge in neighbour_edges: # we just need to iterate over all possible neighbours since just one of them can be one at a time
+            zero_edges = neighbour_edges.copy()
+            zero_edges.remove(active_edge)
+            product = [G.edges()[edge]['message_t'][fac][1] for edge in zero_edges] # get the incoming message to fac for all neighbours beeing 0
+            active_prob = (1 - G[active_edge[0]][active_edge[1]]["message_t"][fac][1])
+            message_sum += reduce(mul, product, 1)* active_prob # multiply be incoming for neighbour beeing 1 and add to sum
+        return message_sum
+    else: # compute for P(X=1)
+        product = [G.edges()[edge]['message_t'][fac][1] for edge in neighbour_edges]
+        return 1 - reduce(mul, product, 1)
+
+
 
 def compute_var_to_fac_message(G, fac, var):
     other = var[0] if var[0]!=fac else var[1]
