@@ -16,7 +16,13 @@ For simplicity we assume that nodes are not self connected, that is $\sigma_{ii}
 
 \section*{(a)}
 
-For $M$ to be a matching, it needs to hold by definition, that $$\forall i:  \sum_j \sigma_{ij} \leq 1$$ This is equivalent to saying $$ \prod_i \mathbbm{1}_{\left[\sum_j \sigma_{ij} \leq 1\right]} $$
+{
+\color{green}
+TODO: Note the $\leq$ instead of the $=$ in the following. This propagates through all formulas below!
+}
+
+For $M$ to be a matching, it needs to hold by definition, that $$\forall i:  \sum_j \sigma_{ij} \leq 1$$ 
+This is equivalent to saying $$ \prod_i \mathbbm{1}_{\left[\sum_j \sigma_{ij} \leq 1\right]} = 1 $$
 where $\mathbbm{1}$ is the indicator function.
 
 So we find the probability distribution
@@ -101,17 +107,17 @@ In general the probability distribution found above is given as
 \end{align}
 Which we can write as 
 \begin{align}
-    P(M) = \frac{1}{Z} \prod_i \Psi_i(\partial M)
+    P(M) = \frac{1}{Z} \prod_i \psi_i(\partial M)
 \end{align}
 with factors
 \begin{align}
-    \Psi_i(\partial M) = \mathbbm{1}_{\left[ \sum_j \sigma_{ij} \leq 1 \right]}
+    \psi_i(\partial M) = \mathbbm{1}_{\left[ \sum_j \sigma_{ij} \leq 1 \right]}
 \end{align}
 
-By $\partial M$ we denote, that each factor $\Psi_i$ is only connected to all nodes $\sigma_{ij}$ for which there is a connection from $i$ to $j$, so for all nodes for which $\sigma_{ij} = 1$ in the initial graph $G$.
+By $\partial M$ we denote, that each factor $\psi_i$ is only connected to all nodes $\sigma_{ij}$ for which there is a connection from $i$ to $j$, so for all nodes for which $\sigma_{ij} = 1$ in the initial graph $G$.
 
 
-In general to draw a factor graph we would start with a graph with all $\sigma_{ij}$ connected to all factors $\Psi_i$. Then we can omit all $\sigma_{ij}$ where $\sigma_{ij} = 0$ in the initial graph $G$. Furthermore we can omit all connections from factors $\Psi_i$ to $\sigma_{ij}$ if $i$ and $j$ are not connected. 
+In general to draw a factor graph we would start with a graph with all $\sigma_{ij}$ connected to all factors $\psi_i$. Then we can omit all $\sigma_{ij}$ where $\sigma_{ij} = 0$ in the initial graph $G$. Furthermore we can omit all connections from factors $\psi_i$ to $\sigma_{ij}$ if $i$ and $j$ are not connected. 
 
 For the graph given here this yields the factor graph:
 
@@ -124,12 +130,12 @@ For the graph given here this yields the factor graph:
     \node (s25) at (4,2) {$\sigma_{25}$};
     \node (s36) at (4,1) {$\sigma_{36}$};
   
-    \node[rectangle] (f1) at (1,6) {$\Psi_{1}$};
-    \node[rectangle] (f2) at (1,5) {$\Psi_{2}$};
-    \node[rectangle] (f3) at (1,4) {$\Psi_{3}$};
-    \node[rectangle] (f4) at (1,3) {$\Psi_{4}$};
-    \node[rectangle] (f5) at (1,2) {$\Psi_{5}$};
-    \node[rectangle] (f6) at (1,1) {$\Psi_{6}$};
+    \node[rectangle] (f1) at (1,6) {$\psi_{1}$};
+    \node[rectangle] (f2) at (1,5) {$\psi_{2}$};
+    \node[rectangle] (f3) at (1,4) {$\psi_{3}$};
+    \node[rectangle] (f4) at (1,3) {$\psi_{4}$};
+    \node[rectangle] (f5) at (1,2) {$\psi_{5}$};
+    \node[rectangle] (f6) at (1,1) {$\psi_{6}$};
   
 
 
@@ -156,6 +162,114 @@ TODO Is this also so simple for the probability distribution scaled by matching 
 
 \section*{(d)}
 
+The general definitions are given as:
+\begin{align}
+    \nu_{i \rightarrow a}^{(t + 1)}(x_i) &\cong \prod_{b \in \partial i \backslash a} \hat{\nu}_{b \rightarrow i}^{(t)}(x_i) \\
+    \hat{\nu}_{a \rightarrow i}^{(t)}(x_i) &\cong \sum_{\textbf{x}_{\partial a} \backslash i} \psi_a (\textbf{x}_{\partial a}) \prod_{j \in \partial a \backslash i} \nu_{j \rightarrow a}^{(t)}(x_j) \\
+    P(x_i) &= \nu_i^{(t)}(x_i) \cong \prod_{a \in \partial i} \hat{\nu}_{a \rightarrow i}^{(t-1)}(x_i)
+\end{align}
+
+
+In our case we have messages from variable to factor:
+\begin{align}
+    \nu_{\sigma_{ij}}^{(ij) \rightarrow i} \cong \prod_{b \in \partial (ij) \backslash i} \hat{\nu}_{\sigma_{ij}}^{b \rightarrow (ij)}
+\end{align}
+and factor to variable:
+\begin{align}
+    \hat{\nu}_{\sigma_{ij}}^{i \rightarrow (ij)} \cong \sum_{\boldsymbol{\sigma}_{\partial i} \backslash (ij)} 
+    \psi_i(\boldsymbol{\sigma}_{\partial i}) \prod_{(ik) \in \partial i \backslash (ij)} \nu_{\sigma_{ik}}^{(ik) \rightarrow i}
+\end{align}
+
+For our problem this leads to messages from factor to variable:
+\begin{align}
+    \hat{\nu}_{\sigma_{ij}}^{i \rightarrow (ij)} &\cong \sum_{\sigma_{\partial i} \backslash (ij)} \mathbbm{1}_{\left[\sum_l \sigma_{il} \leq 1 \right]} \prod_{(ik) \in \partial i \backslash (ij)} \nu_{\sigma_{ik}}^{(ik) \rightarrow i}\\
+\end{align}
+
+This means the marginal is:
+\begin{align}
+    P(\sigma_{ij}) &\cong \prod_{b \in \partial (ij)} \hat{\nu}_{\sigma_{ij}}^{b \rightarrow (ij)} \\
+    &= \hat{\nu}_{\sigma_{ij}}^{i \rightarrow (ij)} \cdot \hat{\nu}_{\sigma_{ij}}^{j \rightarrow (ij)}
+\end{align}
+
+
+
+{
+\color{green}
+TODO: I don't know if we have to write something for the second hint, but this would be the following?
+}
+
+In the following we find some derivations for the adjecent edges if $\sigma_{ij} = 1$ and $\sigma_{ij} = 0$:
+
+For $\sigma_{ij} = 1$ this leads to 
+\begin{align}
+    P(\sigma_{ij} = 1) &\cong \hat{\nu}_{\sigma_{ij}}^{i \rightarrow (ij)} \cdot \hat{\nu}_{\sigma_{ij}}^{j \rightarrow (ij)} \\
+    &= \left[ \sum_{\sigma_{\partial i} \backslash (ij)} \mathbbm{1}_{\left[\sum_l \sigma_{il} \leq 1 \right]} \prod_{(ik) \in \partial i \backslash (ij)} \nu_{\sigma_{ik}}^{(ik) \rightarrow i} \right]
+     \cdot \left[ \sum_{\sigma_{\partial j} \backslash (ij)} \mathbbm{1}_{\left[\sum_l \sigma_{jl} \leq 1 \right]} \prod_{(jk) \in \partial j \backslash (ij)} \nu_{\sigma_{jk}}^{(jk) \rightarrow j} \right]
+\end{align}
+Which can only be $\geq 0$ if 
+\begin{align}
+    \sum_{\sigma_{\partial i} \backslash (ij)} \mathbbm{1}_{\left[\sum_l \sigma_{il} \leq 1 \right]} &= 1 \\
+    \sum_{\sigma_{\partial i} \backslash (ij)} \mathbbm{1}_{\left[\sum_{l \backslash (l = j)} \sigma_{il} + 1 \leq 1 \right]} &= 1 \\
+\end{align}
+and 
+\begin{align}
+    \sum_{\sigma_{\partial j} \backslash (ij)} \mathbbm{1}_{\left[\sum_l \sigma_{jl} \leq 1 \right]} &= 1 \\
+    \sum_{\sigma_{\partial j} \backslash (ij)} \mathbbm{1}_{\left[\sum_{l \backslash (l = i)} \sigma_{jl} + 1 \leq 1 \right]} &= 1
+\end{align}
+
+This is saying that all edges adjecent to $i$ and $j$ except edge $(ij)$ have to be zero, meaning non existant. 
+
+
+For $\sigma_{ij} = 0$ we find with similar reasoning:
+
+\begin{align}
+    P(\sigma_{ij} = 0) &\cong \hat{\nu}_{\sigma_{ij}}^{i \rightarrow (ij)} \cdot \hat{\nu}_{\sigma_{ij}}^{j \rightarrow (ij)} \\
+    &= \left[ \sum_{\sigma_{\partial i} \backslash (ij)} \mathbbm{1}_{\left[\sum_l \sigma_{il} \leq 1 \right]} \prod_{(ik) \in \partial i \backslash (ij)} \nu_{\sigma_{ik}}^{(ik) \rightarrow i} \right]
+     \cdot \left[ \sum_{\sigma_{\partial j} \backslash (ij)} \mathbbm{1}_{\left[\sum_l \sigma_{jl} \leq 1 \right]} \prod_{(jk) \in \partial j \backslash (ij)} \nu_{\sigma_{jk}}^{(jk) \rightarrow j} \right]
+\end{align}
+Which can only be $\geq 0$ if 
+\begin{align}
+    \sum_{\sigma_{\partial i} \backslash (ij)} \mathbbm{1}_{\left[\sum_l \sigma_{il} \leq 1 \right]} &= 1 \\
+    \sum_{\sigma_{\partial i} \backslash (ij)} \mathbbm{1}_{\left[\sum_{l \backslash (l = j)} \sigma_{il} + 0 \leq 1 \right]} &= 1 \\
+\end{align}
+and 
+\begin{align}
+    \sum_{\sigma_{\partial j} \backslash (ij)} \mathbbm{1}_{\left[\sum_l \sigma_{jl} \leq 1 \right]} &= 1 \\
+    \sum_{\sigma_{\partial j} \backslash (ij)} \mathbbm{1}_{\left[\sum_{l \backslash (l = i)} \sigma_{jl} + 0 \leq 1 \right]} &= 1
+\end{align}
+
+Which is saying that any one, but no more than one of the edges adjecent to $i$ except $(ij)$ may be 1 and that any one, but no more than one of the edges adjecent to $j$ except $(ij)$ may be 1. 
+If we use $c_i$ and $c_j$ as the count of edges adjecent to $i$ and $j$ except for edge $(ij)$ respectively, we can say that this allows $c_i+1$ configurations for the edges adjecent to $i$ and $c_j + 1$ configurations for the edges adjecent to $j$ (Any one may be 1 or all are 0).
+
+These derivations are intuitively consistent with the definitions of the matching.
+
+
+
+
+
+{
+\color{green}
+TODO i don't quite get the following, from the reasoning it makes sense but i don't see how it follows from the formulas
+
+
+For $\sigma_{ij}=1$, this leads to:
+\begin{align}
+    P(\sigma_{ij}=1) =  \prod_{\sigma_{ik} \in \partial a \backslash i} v_{\sigma_{ik} \rightarrow i}(0)
+\end{align}
+wich intuitively makes sense, since all the others have to be 0 in order for $\sigma_{ij}$ to be 1.\\
+For $\sigma_{ij}=0$, this leads to:
+\begin{align}
+    P(\sigma_{ij}=1) = \sum_{\sigma_{ik} \in \partial i \backslash \sigma_{ij}} (\mathbbm{1}^{(\sum_{l \backslash i} \sigma_{il} = 1)} \prod_{\sigma_{ik} \in \partial a \backslash i} v_{\sigma_{ik} \rightarrow i}(\sigma_{ik}))\\
+\end{align}
+here the main difference is that the factor $\Psi_{i}$ doesn't sum over $\sigma_{ij}$ anymore, since it is set to 0.
+}
+
+
+
+
+
+{
+\color{red}
 We have the messages from variable to factor:
 \begin{align}
     \hat{v}_{i \rightarrow \alpha}(x_i) = \prod_{\beta \in \partial \alpha \backslash i} \hat{v}_{b \rightarrow i}(x_i)
@@ -190,11 +304,42 @@ For $\sigma_{ij}=0$, this leads to:
 \end{align}
 here the main difference is that the factor $\Psi_{i}$ doesn't sum over $\sigma_{ij}$ anymore, since it is set to 0.
 
+
+}
+
+
+
+
+
+
 \section*{(d)}
-For one point marginal, see (c). For two point marginal, we have:
+{
+\color{green}
+TODO: To get the full marginal we would need to do the full message passing. For the equations the following suffices:
+
+}
+
+For one point marginal, see (c):
 \begin{align}
-    P(\sigma_{ij}, \sigma_{kl}) = P(\sigma_{ij} \vert \sigma_{kl}) P(\sigma_{kl})
+    P(\sigma_{ij}) &\cong \hat{\nu}_{\sigma_{ij}}^{i \rightarrow (ij)} \cdot \hat{\nu}_{\sigma_{ij}}^{j \rightarrow (ij)}
 \end{align}
-with $P(\sigma_{ij} \vert \sigma_{kl}) = $
+
+
+For two point marginal, we have:
+\begin{align}
+    P(\sigma_{ij}, \sigma_{kl}) = P(\sigma_{kl} \vert \sigma_{ij}) P(\sigma_{ij})
+\end{align}
+
+In addition to the one point marginal we need to  find $P(\sigma_{kl} \vert \sigma_{ij})$ which is defined by:
+\begin{align}
+    P(\sigma_{kl} \vert \sigma_{ij} = x) &\cong \prod_{a} \psi_a(\boldsymbol{\sigma}_{\partial a}) \mathbbm{1}_{\left[ \sigma_{ij} = x \right]} \\
+    &= \prod_{a} \mathbbm{1}_{\left[ \sum_{l} \sigma_{al} \leq 1 \right]} \mathbbm{1}_{\left[ \sigma_{ij} = x \right]}
+\end{align}
+
+This is, we add to the original factor graph a node of degree 1 connected to the variable node $\sigma_{ij}$ which fixes $\sigma_{ij} = x$ and run BP on this modified factor graph.
+
+
+
+
 \end{document}
 
