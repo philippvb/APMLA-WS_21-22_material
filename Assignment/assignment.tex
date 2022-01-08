@@ -172,9 +172,12 @@ The general definitions are given as:
 
 In our case we have messages from variable to factor:
 \begin{align}
-    \nu_{\sigma_{ij}}^{(ij) \rightarrow i} \cong \prod_{b \in \partial (ij) \backslash i} \hat{\nu}_{\sigma_{ij}}^{b \rightarrow (ij)}
+    \nu_{\sigma_{ij}}^{(ij) \rightarrow i} &\cong \prod_{b \in \partial (ij) \backslash i} \hat{\nu}_{\sigma_{ij}}^{b \rightarrow (ij)} \\
+    &= \hat{\nu}_{\sigma_{ij}}^{j \rightarrow (ij)}
 \end{align}
-and factor to variable:
+This simplification comes, since variable $(ij)$ only has one other neighbouring factor except $i$, which is $j$. \\
+
+And messages from factor to variable:
 \begin{align}
     \hat{\nu}_{\sigma_{ij}}^{i \rightarrow (ij)} \cong \sum_{\boldsymbol{\sigma}_{\partial i} \backslash (ij)} 
     \psi_i(\boldsymbol{\sigma}_{\partial i}) \prod_{(ik) \in \partial i \backslash (ij)} \nu_{\sigma_{ik}}^{(ik) \rightarrow i}
@@ -182,10 +185,17 @@ and factor to variable:
 
 For our problem this leads to messages from factor to variable:
 \begin{align}
-    \hat{\nu}_{\sigma_{ij}}^{i \rightarrow (ij)} &\cong \sum_{\sigma_{\partial i} \backslash (ij)} \mathbbm{1}_{\left[\sum_l \sigma_{il} \leq 1 \right]} \prod_{(ik) \in \partial i \backslash (ij)} \nu_{\sigma_{ik}}^{(ik) \rightarrow i}\\
+    \hat{\nu}_{\sigma_{ij}}^{i \rightarrow (ij)} &\cong \sum_{\boldsymbol{\sigma}_{\partial i} \backslash (ij)} \mathbbm{1}_{\left[\sum_l \sigma_{il} \leq 1 \right]} \prod_{(ik) \in \partial i \backslash (ij)} \nu_{\sigma_{ik}}^{(ik) \rightarrow i}\\
 \end{align}
 
-This means the marginal is:
+
+{
+\color{green}
+Note here that the sum is over all the values that the $\sigma$ which are neighbours of $i$ could assume.
+}
+
+
+The marginal is:
 \begin{align}
     P(\sigma_{ij}) &\cong \prod_{b \in \partial (ij)} \hat{\nu}_{\sigma_{ij}}^{b \rightarrow (ij)} \\
     &= \hat{\nu}_{\sigma_{ij}}^{i \rightarrow (ij)} \cdot \hat{\nu}_{\sigma_{ij}}^{j \rightarrow (ij)}
